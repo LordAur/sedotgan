@@ -1,0 +1,27 @@
+{
+  "name": "sedotgan",
+  "version": "1.0.0",
+  "description": "Sedotgan is a crawler API to get content from another website with ease. Build with NodeJS and x-ray.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crawler",
+    "scrapping"
+  ],
+  "author": "Yudha Pratama Wicaksana",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "fastify": "^3.15.0",
+    "x-ray": "^2.3.4"
+  },
+  "devDependencies": {
+    "mocha": "^8.3.2"
+  }
+}
