@@ -12,21 +12,39 @@ fastify.get('/crawling', async (request, reply) => {
         data = JSON.parse(q.data)
     }
 
-    crawling.crawler(q.url, data)
-        .then((resp) => {
-            reply
-                .code(200)
-                .header('Content-Type', 'application/json; charset=utf-8')
-                .send(resp)
-        })
-        .catch((err) => {
-            reply
-                .code(400)
-                .header('Content-Type', 'application/json; charset=utf-8')
-                .send({
-                    errors: err.message
-                })
-        })
+    if (q.puppeteer === "true") {
+        crawling.domCrawler(q.url, data)
+            .then((resp) => {
+                reply
+                    .code(200)
+                    .header('Content-Type', 'application/json; charset=utf-8')
+                    .send(resp)
+            })
+            .catch((err) => {
+                reply
+                    .code(400)
+                    .header('Content-Type', 'application/json; charset=utf-8')
+                    .send({
+                        errors: err.message
+                    })
+            })
+    } else {
+        crawling.crawler(q.url, data)
+            .then((resp) => {
+                reply
+                    .code(200)
+                    .header('Content-Type', 'application/json; charset=utf-8')
+                    .send(resp)
+            })
+            .catch((err) => {
+                reply
+                    .code(400)
+                    .header('Content-Type', 'application/json; charset=utf-8')
+                    .send({
+                        errors: err.message
+                    })
+            })
+    }
 })
 
 const isValidJSONString = (str) => {
