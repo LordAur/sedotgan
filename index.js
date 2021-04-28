@@ -6,7 +6,12 @@ const crawling = require('./lib/crawler')
 
 fastify.get('/crawling', async (request, reply) => {
     const q = qs.parse(request.url.split("?")[1])
-    const data = JSON.parse(q.data)
+    
+    let data = q.data
+    if (isValidJSONString(q.data)) {
+        data = JSON.parse(q.data)
+    }
+
     crawling.crawler(q.url, data)
         .then((resp) => {
             reply
@@ -23,6 +28,16 @@ fastify.get('/crawling', async (request, reply) => {
                 })
         })
 })
+
+const isValidJSONString = (str) => {
+    try {
+        JSON.parse(str)
+    } catch (e) {
+        return false
+    }
+
+    return true
+}
 
 const start = async () => {
     try {
