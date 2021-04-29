@@ -2,18 +2,24 @@ require('dotenv').config()
 const fastify = require('fastify')({ logger: true })
 const qs = require('querystring')
 
+const utils = require('./lib/utils')
 const crawling = require('./lib/crawler')
 
 fastify.get('/crawling', async (request, reply) => {
     const q = qs.parse(request.url.split("?")[1])
     
     let data = q.data
-    if (isValidJSONString(q.data)) {
+    if (utils.isValidJSONString(q.data)) {
         data = JSON.parse(q.data)
+    } else {
+        data = utils.normalize(q.data)
     }
 
     if (q.puppeteer === "true") {
-        crawling.domCrawler(q.url, data)
+        let paginateClick = utils.normalize(q.paginateClick)
+        let paginateEnd = utils.normalize(q.paginateEnd)
+
+        crawling.domCrawler(q.url, data, Boolean(q.paginate), q.paginateLimit || 1, paginateClick, paginateEnd)
             .then((resp) => {
                 reply
                     .code(200)
@@ -46,16 +52,6 @@ fastify.get('/crawling', async (request, reply) => {
             })
     }
 })
-
-const isValidJSONString = (str) => {
-    try {
-        JSON.parse(str)
-    } catch (e) {
-        return false
-    }
-
-    return true
-}
 
 const start = async () => {
     try {
